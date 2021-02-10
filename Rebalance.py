@@ -12,10 +12,18 @@ yesterday = today - datetime.timedelta(days=1)
 # List of average annual inflation values (defunct)
 # RPI = [item for sublist in pd.read_csv('C:/Users/Tom/Desktop/ukrpi.csv').values for item in sublist]
 
-# Reading the da
-myassets = pd.read_csv(r'C:\Users\Tom\Desktop\Python projects\Portfolio management tool\assets.csv',
-                       index_col=False,
-                       dtype=str)
+
+# Function to load in assets from csv file
+def load_assets():
+
+    try:
+        myassets = pd.read_csv("myassets.csv",
+                                index_col=False,
+                                dtype=str)
+    except Exception:
+        myassets = pd.DataFrame(dtype=str)
+
+    return myassets
 
 
 # Function to add an asset into the asset table requiring the ticker, number of shares and currency
@@ -25,7 +33,7 @@ def add_asset(ticker, shares, currency):
     asset_class = input()
     myassets[asset_class].append(f'{ticker}#{shares}/{currency}')
     df = pd.concat([pd.Series(y,name=x) for x,y in myassets.items()],axis =1)
-    df.to_csv(r'C:\Users\Tom\Desktop\Python projects\Portfolio management tool\assets.csv',
+    df.to_csv('myassets.csv',
               index=False)
 
 
@@ -84,7 +92,7 @@ def getvalue(assetdf):
 
     newdata.index = pd.to_datetime(newdata.index)  # Converting the index of the DataFrame to a datetime series
     try:
-        olddata = pd.read_csv(r'C:\Users\Tom\Desktop\Python projects\Portfolio management tool\valuedf.csv',
+        olddata = pd.read_csv('valuedf.csv',
                               index_col=0,
                               parse_dates=True,
                               dayfirst=True,
@@ -100,10 +108,9 @@ def getvalue(assetdf):
     olddata= olddata[~olddata.index.duplicated(keep="last")]
 
     # Writing the data back into the csv file
-    olddata.to_csv(r'C:\Users\Tom\Desktop\Python projects\Portfolio management tool\valuedf.csv')
+    olddata.to_csv('valuedf.csv')
     return olddata
 
-
-getvalue(myassets)
+getvalue(load_assets())
 
 
