@@ -28,11 +28,11 @@ def load_assets():
 
 # Function to add an asset into the asset table requiring the ticker, number of shares and currency
 def add_asset(ticker, shares, currency):
-
+    myassets = load_assets()
     print("What asset class is this? We currently have:" + str([key for key, value in myassets.items()]))
     asset_class = input()
-    myassets[asset_class].append(f'{ticker}#{shares}/{currency}')
-    df = pd.concat([pd.Series(y,name=x) for x,y in myassets.items()],axis =1)
+    myassets[asset_class][int(myassets[asset_class].last_valid_index()) +1] = f'{ticker}#{shares}/{currency}'
+    df = pd.concat([pd.Series(y,name=x) for x,y in myassets.items()], axis=1)
     df.to_csv('myassets.csv',
               index=False)
 
@@ -112,5 +112,4 @@ def getvalue(assetdf):
     return olddata
 
 getvalue(load_assets())
-
 
