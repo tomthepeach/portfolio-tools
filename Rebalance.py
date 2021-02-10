@@ -4,7 +4,7 @@ import numpy as np
 import datetime
 from forex_python.converter import CurrencyRates
 
-
+# CHANGES BY FREDDDYYY
 # Date-time considerations
 today = datetime.datetime.today()
 yesterday = today - datetime.timedelta(days=1)
