@@ -4,7 +4,7 @@ import numpy as np
 import datetime
 from forex_python.converter import CurrencyRates
 
-# CHANGES BY FREDDDYYY
+
 # Date-time considerations
 today = datetime.datetime.today()
 yesterday = today - datetime.timedelta(days=1)
@@ -30,11 +30,17 @@ def load_assets():
 def add_asset(ticker, shares, currency):
     myassets = load_assets()
     print("What asset class is this? We currently have:" + str([key for key, value in myassets.items()]))
-    asset_class = input()
-    myassets[asset_class][int(myassets[asset_class].last_valid_index()) +1] = f'{ticker}#{shares}/{currency}'
-    df = pd.concat([pd.Series(y,name=x) for x,y in myassets.items()], axis=1)
-    df.to_csv('myassets.csv',
-              index=False)
+    asset_class = str(input())
+
+    if asset_class not in myassets:
+
+        newcol = pd.Series([f'{ticker}#{shares}/{currency}'], dtype=str, name=asset_class)
+        myassets = pd.concat([myassets, newcol], axis=1,)
+
+    else:
+        myassets[asset_class][myassets.last_valid_index + 1] = f'{ticker}#{shares}/{currency}'
+
+    myassets.to_csv('myassets.csv',index=False)
 
 
 # Function to fetch the exchange rate for a currency pair
