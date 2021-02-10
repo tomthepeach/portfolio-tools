@@ -21,7 +21,7 @@ emerg = ['HMCA.L#30/£', 'HMCH.L#60/p', 'HTWN.L#5/p']
 bond = ['VGOV.L#30/£']
 euvalue = ['ZPRX.DE#30/e']
 
-myassets = {'gold': ['SGLN.L#30/p'], 'emerg': ['HMCA.L#30/£', 'HMCH.L#60/p', 'HTWN.L#5/p'], 'bond': ['VGOV.L#30/£'], 'euvalue': ['ZPRX.DE#30/e']}
+myassets = {'gold': ['SGLN.L#30/p'], 'emerg': ['HMCA.L#30/£', 'HMCH.L#60/p', 'HTWN.L#5/p'], 'bond': ['VGOV.L#30/£'], 'euvalue': ['ZPRX.DE#30/e'], 'volatlitiy': ['^VIX#1/£']}
 
 # Managing exchange rates
 
@@ -44,7 +44,6 @@ weights = np.array([0.2, 0.2, 0.2, 0.4])
 
 def getvalue(dict):
 
-    olddata = pd.read_csv(r'C:\Users\Tom\Desktop\Python projects\Portfolio management tool\valuedf.csv', index_col=0)
     # df = pd.DataFrame()
     newdata = pd.DataFrame()
 
@@ -77,9 +76,22 @@ def getvalue(dict):
                 None
                 # total += stockdata["value"]
         # df[name][today] = total
-    print(olddata)
-    print(newdata)
-    olddata.append(newdata)
+    newdata.index = pd.to_datetime(newdata.index)
+
+    newdata.to_csv(r'C:\Users\Tom\Desktop\Python projects\Portfolio management tool\newvalues.csv')
+
+    try:
+        olddata = pd.read_csv(r'C:\Users\Tom\Desktop\Python projects\Portfolio management tool\valuedf.csv',
+                          index_col=0,
+                          parse_dates=True,
+                          dayfirst=True)
+    except:
+        olddata = pd.DataFrame()
+
+
+    olddata = pd.concat([olddata,newdata], axis = 0, ignore_index = False)
+
+
     olddata.to_csv(r'C:\Users\Tom\Desktop\Python projects\Portfolio management tool\valuedf.csv')
     return olddata
 
